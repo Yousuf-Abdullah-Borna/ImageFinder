@@ -4,6 +4,7 @@ import Select from "@material-ui/core/Select";
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { Component } from 'react';
+import ImageResults from '../image-results/ImageResults';
 const styles = {
     margin: "40px",
     width: "600px",
@@ -112,8 +113,10 @@ render(){
         <MenuItem value={20}>20</MenuItem>
       </Select>
 
+        <br/>
 
-   
+        {this.state.image.length > 0 ? (<ImageResults images ={this.state.image}/>) : null }
+         
 
    
 
