@@ -2,6 +2,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import TextField from '@material-ui/core/TextField';
+import axios from 'axios';
 import React, { Component } from 'react';
 const styles = {
     margin: "40px",
@@ -56,6 +57,11 @@ class Search extends Component {
 
         this.setState({
             searchText: event.target.value
+        }, ()=>{
+
+    axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`)
+    .then( res => this.setState({ image:res.data.hits}))
+    .catch( err => console.log(err))
         })
     }
 
@@ -69,6 +75,9 @@ class Search extends Component {
     }
 
 render(){
+
+   console.log(this.state.image)
+
 
     return (
         <div>
