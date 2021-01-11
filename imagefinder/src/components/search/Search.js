@@ -43,7 +43,7 @@ class Search extends Component {
            
         this.state = {
             searchText:'',
-            amount:15,
+            amount:0,
             apiUrl:'https://pixabay.com/api/',
             apiKey:'19829433-45b01ae66ae4acaf0f2e7a034',
             image:[]
@@ -72,7 +72,12 @@ class Search extends Component {
 
         this.setState({
             amount: event.target.value
-        })
+        }, ()=>{
+
+            axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`)
+            .then( res => this.setState({ image:res.data.hits}))
+            .catch( err => console.log(err))
+                })
     }
 
 render(){
@@ -93,7 +98,7 @@ render(){
     onChange={this.onTextChange}/>
 
  
-<InputLabel  style={LabelStyles} >Age</InputLabel>
+<InputLabel  style={LabelStyles} >Images Amount</InputLabel>
 
 
    <Select
@@ -104,13 +109,15 @@ render(){
     onChange={this.onAmountChange}
 
       >
-        <MenuItem value="">
+        <MenuItem value={0}>
           <em>None</em>
         </MenuItem>
         <MenuItem value={5}>5</MenuItem>
         <MenuItem value={10}>10</MenuItem>
         <MenuItem value={15}>15</MenuItem>
-        <MenuItem value={20}>20</MenuItem>
+        <MenuItem value={30}>30</MenuItem>
+        <MenuItem value={60}>60</MenuItem>
+        <MenuItem value={120}>120</MenuItem>
       </Select>
 
         <br/>
