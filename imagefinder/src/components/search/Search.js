@@ -1,6 +1,7 @@
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import React, { Component } from 'react';
@@ -10,6 +11,7 @@ const styles = {
     width: "600px",
     position: "relative",
     top: "60px",
+    left:"570px"
     
   };
 
@@ -19,6 +21,15 @@ const styles = {
     position: "absolute",
     top: "170px",
     left:"6px",
+    
+  };
+
+
+  const switchStyles = {
+    margin: "40px",
+    position: "absolute",
+    top: "150px",
+    left:"516px",
     
   };
 
@@ -46,12 +57,28 @@ class Search extends Component {
             amount:0,
             apiUrl:'https://pixabay.com/api/',
             apiKey:'19829433-45b01ae66ae4acaf0f2e7a034',
-            image:[]
+            image:[],
+            trueValue:false
 
 
         }
     }
 
+    toggleChecked = (event) =>{
+
+      this.setState((prevstate)=>{
+        return{
+        trueValue: (prevstate.trueValue) ? false:true
+        }
+    }, ()=>{
+
+axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=${this.state.trueValue}`)
+.then( res => this.setState({ image:res.data.hits}))
+.catch( err => console.log(err))
+    })
+
+     
+    }
 
     onTextChange = (event)=>{
 
@@ -60,7 +87,7 @@ class Search extends Component {
             searchText: event.target.value
         }, ()=>{
 
-    axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`)
+    axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=${this.state.trueValue}`)
     .then( res => this.setState({ image:res.data.hits}))
     .catch( err => console.log(err))
         })
@@ -74,7 +101,7 @@ class Search extends Component {
             amount: event.target.value
         }, ()=>{
 
-            axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`)
+            axios.get(`${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=${this.state.trueValue}`)
             .then( res => this.setState({ image:res.data.hits}))
             .catch( err => console.log(err))
                 })
@@ -83,6 +110,7 @@ class Search extends Component {
 render(){
 
    console.log(this.state.image)
+   console.log(this.state.trueValue)
 
 
     return (
@@ -124,9 +152,11 @@ render(){
 
         {this.state.image.length > 0 ? (<ImageResults images ={this.state.image}/>) : null }
          
-
-   
-
+      <div style={switchStyles}>
+      
+      <InputLabel>Parental Control</InputLabel>
+        <Switch checked={this.state.trueValue} onChange={this.toggleChecked} size='medium'/>
+        </div>
 
 
         </div>
